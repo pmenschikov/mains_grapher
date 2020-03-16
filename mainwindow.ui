@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>711</width>
+    <height>513</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Mains Graph</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QTableWidget" name="tblVoltages">
+          <property name="maximumSize">
+           <size>
+            <width>142</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Raw RMS </string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Volt RMS</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblCurrents">
+          <property name="maximumSize">
+           <size>
+            <width>142</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Raw RMS</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Current RMS</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>711</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuStart">
+    <property name="title">
+     <string>Start</string>
+    </property>
+    <addaction name="actionstart"/>
+   </widget>
+   <widget class="QMenu" name="menuStop">
+    <property name="title">
+     <string>Stop</string>
+    </property>
+    <addaction name="actionstop"/>
+   </widget>
+   <widget class="QMenu" name="menuSerialPort">
+    <property name="title">
+     <string>ADC</string>
+    </property>
+    <addaction name="actioncmd_start"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuStart"/>
+   <addaction name="menuStop"/>
+   <addaction name="menuSerialPort"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionstart">
+   <property name="text">
+    <string>start</string>
+   </property>
+  </action>
+  <action name="actionstop">
+   <property name="text">
+    <string>stop</string>
+   </property>
+  </action>
+  <action name="actioncmd_start">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>cmd_start</string>
+   </property>
+  </action>
+  <action name="actionGain">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gain</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,9 @@
+QT += widgets opengl
+QWT_INSTALL_LIBS = "/usr/lib64"
+QWT_INSTALL_HEADERS = "/usr/include/qwt6"
+QWT_INSTALL_DOCS = "/usr/share/doc/qwt-6.1.3-r2"
+QWT_CONFIG += QwtPlot QwtWidgets QwtPkgConfig
+VERSION = 6.1.3
+QWT_VERSION = 6.1.3
+QWT_CONFIG += QwtOpenGL
+QWT_CONFIG += QwtSvg
