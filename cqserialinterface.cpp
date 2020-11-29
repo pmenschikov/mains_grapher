@@ -3,6 +3,7 @@
 CQSerialInterface::CQSerialInterface(QObject *parent) : QObject(parent)
 {
     connect(&m_port,&QSerialPort::readyRead, this, &CQSerialInterface::new_data);
+    connect(&m_port,&QSerialPort::errorOccurred, this, &CQSerialInterface::port_error);
     m_port.setFlowControl(QSerialPort::NoFlowControl);
 }
 
@@ -14,8 +15,7 @@ void CQSerialInterface::new_data()
 
 bool CQSerialInterface::send(char *data, int len)
 {
-    qDebug() << "data: " << data << " " << len;
-    qDebug() << "write len: " << m_port.write(data, len);
+    m_port.write(data, len);
     m_port.flush();
    return true;
 }
@@ -33,4 +33,14 @@ void CQSerialInterface::close()
 bool CQSerialInterface::isOpen()
 {
     return m_port.isOpen();
+}
+
+void CQSerialInterface::port_error(QSerialPort::SerialPortError error)
+{
+    qDebug() << "Serial port error: " << error;
+
+    if( error != QSerialPort::SerialPortError::NoError)
+    {
+        emit sig_error(static_cast<int>(error));
+    }
 }

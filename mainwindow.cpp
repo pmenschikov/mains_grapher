@@ -13,8 +13,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
+   // ,ui_power(new powers(this))
 {
     ui->setupUi(this);
+    ui_power1 = new powers_widget();
 
     m_portname = "ttyACM0";
 
@@ -32,24 +34,10 @@ MainWindow::MainWindow(QWidget *parent) :
                                m_ctrl->get_curve_data(4));
 
 
-#if 0
-   m_statusLeft = new QLabel("Left", this);
-   m_statusLeft->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-
-   m_statusMiddle = new QLabel("", this);
-   m_statusMiddle->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-   m_statusRight = new QLabel(m_portname, this);
-   m_statusRight->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-   statusBar()->addPermanentWidget(m_statusLeft, 2);
-   statusBar()->addPermanentWidget(m_statusMiddle, 1);
-   statusBar()->addPermanentWidget(m_statusRight, 0);
-#endif
-
-
     if( m_iface->open())
     {
         QString msg = "Serial port opened";
-        ui->statusBar->showMessage(msg, 4000);
+        ui->statusBar->showMessage(msg);
     }
     else {
         QString msg = QString("Serial port not opened");
@@ -57,41 +45,38 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     ui->verticalLayout->addWidget(d_plot_voltages,10);
-   // d_plot_voltages->setTitle("Voltages");
-    //d_plot_voltages->replot();
+    d_plot_voltages->setMinimumSize(444,100);
 
     d_plot_currents = new Plot(this,
                                m_ctrl->get_curve_data(1),
                                m_ctrl->get_curve_data(3),
                                m_ctrl->get_curve_data(5));
     ui->verticalLayout->addWidget(d_plot_currents, 10);
-    //d_plot_currents->setTitle("Currents");
-    //d_plot_currents->replot();
+    d_plot_currents->setMinimumSize(444,100);
 
-    connect(ui->menuSerialPort->actions().first(),
-            &QAction::triggered,
-            this,
-            &MainWindow::actionCmdStart);
+
+    connect((CQSerialInterface*)m_iface,&CQSerialInterface::sig_error, this,
+            &MainWindow::if_error);
+    connect(ui->menuPort->actions().first(),&QAction::triggered,this,
+            &MainWindow::port_open);
+    connect(ui->menuPort->actions().last(), &QAction::triggered, this,
+            &MainWindow::port_close);
+    connect(ui->menuMeasuremens->actions().first(), &QAction::triggered,
+            this,&MainWindow::ui_power);
     {
     auto actions = ui->menuFile->actions();
     connect(actions.first(), &QAction::triggered, this, &MainWindow::close);
     }
-
     {
-        auto actions = ui->menuStart->actions();
-        connect(actions.first(),
-                &QAction::triggered,
-                this,
-                &MainWindow::actionStart);
+      auto actions = ui->menuSerialPort->actions();
+    connect(actions.first(),
+            &QAction::triggered,
+            this,
+            &MainWindow::actionCmdStart);
+    connect(actions.at(1), &QAction::triggered, this, &MainWindow::adc_calibrate);
     }
-
-    {
-        auto actions = ui->menuStop->actions();
-        connect(actions.first(),
-                &QAction::triggered,
-                this,
-                &MainWindow::actionStop);
-    }
+    connect(ui->menuStart,&QMenu::aboutToShow, this, &MainWindow::actionStart);
+    connect(ui->menuStop, &QMenu::aboutToShow, this, &MainWindow::actionStop);
 
     createActions();
 
@@ -101,13 +86,16 @@ MainWindow::MainWindow(QWidget *parent) :
         {
             ui->tblVoltages->setItem(i,j, new QTableWidgetItem);
             ui->tblCurrents->setItem(i,j,new QTableWidgetItem);
+            ui->tblPowers->setItem(i,j, new QTableWidgetItem);
 
             ui->tblVoltages->item(i,j)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
             ui->tblCurrents->item(i,j)->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-            ui->tblVoltages->setColumnWidth(j,70);
-            ui->tblCurrents->setColumnWidth(j,70);
+            //ui->tblVoltages->setColumnWidth(j,70);
+            //ui->tblCurrents->setColumnWidth(j,70);
         }
     }
+
+    connect(this, &MainWindow::update_powers, ui_power1, &powers_widget::set_powers);
 }
 
 void MainWindow::createActions()
@@ -131,6 +119,11 @@ MainWindow::~MainWindow()
 {
     delete m_ctrl;
     delete ui;
+}
+
+void MainWindow::ui_power()
+{
+  ui_power1->show();
 }
 
 void MainWindow::actionStart()
@@ -164,6 +157,11 @@ void MainWindow::actionOwrs(bool checked)
     m_ctrl->set_owrs(checked);
 }
 
+void MainWindow::adc_calibrate()
+{
+  qDebug() << m_ctrl->zero();
+}
+
 void MainWindow::timerEvent(QTimerEvent *event)
 {
     if( event->timerId() == m_timer)
@@ -178,14 +176,58 @@ void MainWindow::update_graphs()
     d_plot_currents->replot();
     d_plot_voltages->replot();
 
-    auto rms = m_ctrl->rms();
+    CMeasurements* measurements = m_ctrl->measurements();
 
     for(int i=0; i<3; i++)
     {
-        ui->tblVoltages->item(i,0)->setText(QString("%1").arg(rms[i*2]));
-        ui->tblCurrents->item(i,0)->setText(QString("%1").arg(rms[i*2+1]));
+        ui->tblVoltages->item(i,1)->
+            setText(QString("%1").arg(m_ctrl->rms_voltage(i)));
+        ui->tblCurrents->item(i,1)->
+            setText(QString("%1").arg(m_ctrl->rms_current(i+1)));
 
-        ui->tblVoltages->item(i,1)->setText(QString("%1").arg(rms[i*2]*0.0732f*3.0f));
-        ui->tblCurrents->item(i,1)->setText(QString("%1").arg(rms[i*2+1]*0.15f));
+        ui->tblVoltages->item(i,0)->setText(QString("%1").
+                                            arg(measurements->m_rms[i*2]));
+        ui->tblCurrents->item(i,0)->setText(QString("%1").
+                                            arg(measurements->m_rms[i*2+1]));
     }
+    for(int i=0; i<3; i++)
+      {
+        ui->tblPowers->item(i,0)->setText(
+              QString("%1").arg(m_ctrl->s_power(i)));
+        ui->tblPowers->item(i,1)->setText(
+              QString("%1").arg(m_ctrl->p_power(i)));
+      }
+    emit update_powers(m_ctrl);
+}
+
+void MainWindow::if_error(int err)
+{
+  qDebug() << "if error: " << err;
+  m_iface->close();
+  ui->statusBar->showMessage("port closed");
+}
+
+void MainWindow::port_open()
+{
+  qDebug() << __PRETTY_FUNCTION__;
+  if( !m_iface->isOpen() )
+    {
+      bool res = m_iface->open();
+      ui->statusBar->showMessage(res?"Port opened":"Port not opened");
+    }
+}
+
+void MainWindow::port_close()
+{
+  qDebug() << __PRETTY_FUNCTION__;
+  if( m_iface->isOpen())
+    {
+      m_iface->close();
+      ui->statusBar->showMessage("port closed");
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  Q_UNUSED(event)
+  ui_power1->close();
 }

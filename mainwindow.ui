@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>711</width>
-    <height>513</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,17 +31,29 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QTableWidget" name="tblVoltages">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
-            <width>142</width>
+            <width>182</width>
             <height>16777215</height>
            </size>
           </property>
           <attribute name="horizontalHeaderVisible">
            <bool>true</bool>
           </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>90</number>
+          </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>20</number>
           </attribute>
           <row>
            <property name="text">
@@ -65,24 +77,39 @@
           </column>
           <column>
            <property name="text">
-            <string>Volt RMS</string>
+            <string>Vrms</string>
            </property>
           </column>
          </widget>
         </item>
         <item>
          <widget class="QTableWidget" name="tblCurrents">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
-            <width>142</width>
+            <width>182</width>
             <height>16777215</height>
            </size>
           </property>
           <attribute name="horizontalHeaderVisible">
            <bool>true</bool>
           </attribute>
+          <attribute name="horizontalHeaderMinimumSectionSize">
+           <number>17</number>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>90</number>
+          </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>18</number>
           </attribute>
           <row>
            <property name="text">
@@ -106,7 +133,54 @@
           </column>
           <column>
            <property name="text">
-            <string>Current RMS</string>
+            <string>Irms</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tblPowers">
+          <property name="maximumSize">
+           <size>
+            <width>182</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>90</number>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>20</number>
+          </attribute>
+          <attribute name="verticalHeaderHighlightSections">
+           <bool>true</bool>
+          </attribute>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Power,VA</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Power,W</string>
            </property>
           </column>
          </widget>
@@ -136,24 +210,38 @@
     <property name="title">
      <string>Start</string>
     </property>
-    <addaction name="actionstart"/>
    </widget>
    <widget class="QMenu" name="menuStop">
     <property name="title">
      <string>Stop</string>
     </property>
-    <addaction name="actionstop"/>
    </widget>
    <widget class="QMenu" name="menuSerialPort">
     <property name="title">
      <string>ADC</string>
     </property>
     <addaction name="actioncmd_start"/>
+    <addaction name="actionCalibrate"/>
+   </widget>
+   <widget class="QMenu" name="menuPort">
+    <property name="title">
+     <string>Port</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuMeasuremens">
+    <property name="title">
+     <string>Measuremens</string>
+    </property>
+    <addaction name="actionPowers"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuStart"/>
    <addaction name="menuStop"/>
    <addaction name="menuSerialPort"/>
+   <addaction name="menuPort"/>
+   <addaction name="menuMeasuremens"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -196,6 +284,26 @@
    </property>
    <property name="text">
     <string>Gain</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionPowers">
+   <property name="text">
+    <string>Powers</string>
+   </property>
+  </action>
+  <action name="actionCalibrate">
+   <property name="text">
+    <string>Calibrate</string>
    </property>
   </action>
  </widget>

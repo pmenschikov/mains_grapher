@@ -24,9 +24,11 @@ public:
     bool isOpen();
 
 signals:
+	bool sig_error(int);
 
 public slots:
    void new_data();
+   void port_error(QSerialPort::SerialPortError);
 private:
     QSerialPort m_port;
 };

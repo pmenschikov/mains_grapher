@@ -27,6 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    cmeasurements.cpp \
         main.cpp \
         mainwindow.cpp \
     plot.cpp \
@@ -34,9 +35,11 @@ SOURCES += \
     bufferedcurve.cpp \
     cadccontroller.cpp \
     ccs5451_controller.cpp \
-    cqserialinterface.cpp
+    cqserialinterface.cpp \
+    powers_widget.cpp
 
 HEADERS += \
+    cmeasurements.h \
         mainwindow.h \
     plot.h \
     cdatabufffer.h \
@@ -44,9 +47,11 @@ HEADERS += \
     cadccontroller.h \
     cadcctrl_interface.h \
     ccs5451_controller.h \
-    cqserialinterface.h
+    cqserialinterface.h \
+    powers_widget.h
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        powers_widget.ui
 
 INCLUDEPATH += "/usr/include/qwt6"
 DEPENDPATH  += "/usr/include/qwt6"

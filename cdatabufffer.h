@@ -60,6 +60,7 @@ public:
 
 public:
     void put(QByteArray data);
+    void put(adc_data data);
 
     QVector<adc_data> get(int count);
 
@@ -69,8 +70,6 @@ public:
 
     void prepare();
 
-    typedef QVector<int16_t> rms_t;
-    rms_t rms();
 
 private:
     void init();
@@ -79,6 +78,8 @@ protected:
     int m_current;
     QVector<adc_data> m_data;
     QList<BufferedCurve*> m_curves;
+public:
+    QVector<float> m_apower_sum;
 
     int m_snapshot;
 };

@@ -16,6 +16,12 @@ adc_data::adc_data(QByteArray data)
    s >> current_b;
    s >> voltage_c;
    s >> current_c;
+   voltage_a+=165;
+   voltage_b+=111;
+   voltage_c+=170;
+   current_a+=310;
+   current_b+=192;
+   current_c+=303;
 }
 
 QString adc_data::toStr() const
@@ -23,7 +29,7 @@ QString adc_data::toStr() const
     QString ret;
     QTextStream s(&ret);
 
-    s << "(" << hex << data_num;
+    s << "(" << Qt::hex << data_num;
     s << "," << voltage_a;
     s << "," << current_a;
     s << "," << voltage_b;
@@ -37,12 +43,18 @@ QString adc_data::toStr() const
 void CDataBuffer::init()
 {
     m_data.resize(m_capacity);
+    m_apower_sum.resize(3);
     //qDebug() << "capacity: " << m_data.capacity() << " size: " << m_data.size();
 }
 
 void CDataBuffer::put(QByteArray data)
 {
-    m_data[m_current] = adc_data(data);
+  put(adc_data(data));
+}
+
+void CDataBuffer::put(adc_data data)
+{
+    m_data[m_current] = data;
     m_current++;
     if( m_current >= m_capacity)
     {
@@ -95,30 +107,6 @@ void CDataBuffer::prepare()
     }
 }
 
-CDataBuffer::rms_t CDataBuffer::rms()
-{
-    QVector<int> sums(6, 0);
-    rms_t result(6);
-
-    int count = 40*4;
-
-    for(int pos=0; pos<count; pos++)
-    {
-        for(int field=0; field<6; field++)
-        {
-           int16_t value = get_value(pos, field);
-           sums[field] += value*value;
-        }
-    }
-
-    for(int field=0; field<6; field++)
-    {
-        result[field] =
-                static_cast<int16_t>(floorf(sqrtf((static_cast<float>(sums[field]))/count)));
-    }
-
-    return result;
-}
 
 
 

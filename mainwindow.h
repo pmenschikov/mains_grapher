@@ -6,6 +6,7 @@
 
 #include "ccs5451_controller.h"
 #include "cqserialinterface.h"
+#include "powers_widget.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,7 +32,20 @@ public slots:
     void actionGain(bool);
     void actionOwrs(bool);
 
+    void if_error(int);
+
+    void port_open();
+    void port_close();
+
+    void ui_power();
+
+    void adc_calibrate();
+
     virtual void timerEvent(QTimerEvent *);
+    void closeEvent(QCloseEvent *event);
+
+signals:
+    void update_powers(CCS5451_controller*);
 private:
     void update_graphs();
 
@@ -46,6 +60,7 @@ private:
 
     QString m_portname;
 private:
+    powers_widget *ui_power1;
     Ui::MainWindow *ui;
 
 private:
