@@ -181,29 +181,31 @@ void MainWindow::update_graphs()
     for(int i=0; i<3; i++)
     {
         ui->tblVoltages->item(i,1)->
-            setText(QString("%1").arg(m_ctrl->rms_voltage(i)));
+            setText(QString("%1").arg(m_ctrl->rms_voltage(i),0,'f',2));
         ui->tblCurrents->item(i,1)->
-            setText(QString("%1").arg(m_ctrl->rms_current(i+1)));
+            setText(QString("%1").arg(m_ctrl->rms_current(i+1),0,'f',2));
 
         ui->tblVoltages->item(i,0)->setText(QString("%1").
-                                            arg(measurements->m_rms[i*2]));
+                                            arg(measurements->m_rms[i*2],0,'f',2));
         ui->tblCurrents->item(i,0)->setText(QString("%1").
-                                            arg(measurements->m_rms[i*2+1]));
-    }
-    for(int i=0; i<3; i++)
-      {
+                                            arg(measurements->m_rms[i*2+1],0,'f',2));
+
         ui->tblPowers->item(i,0)->setText(
-              QString("%1").arg(m_ctrl->s_power(i)));
+              QString("%1").arg(m_ctrl->s_power(i),0,'f',2));
         ui->tblPowers->item(i,1)->setText(
-              QString("%1").arg(m_ctrl->p_power(i)));
-      }
+              QString("%1").arg(m_ctrl->p_power(i),0,'f',2));
+    }
+
     emit update_powers(m_ctrl);
 }
 
 void MainWindow::if_error(int err)
 {
-  qDebug() << "if error: " << err;
-  m_iface->close();
+  ui->statusBar->showMessage(QString("Inteface error %1").arg(err));
+  if( m_iface->isOpen() )
+  {
+        m_iface->close();
+  }
   ui->statusBar->showMessage("port closed");
 }
 
