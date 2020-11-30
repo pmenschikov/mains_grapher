@@ -9,6 +9,7 @@
 #include "ccs5451_controller.h"
 #include "cadcctrl_interface.h"
 
+const char *g_calibration_file = "calibration.data";
 
 CCS5451_controller::CCS5451_controller():
   m_gain(false),
@@ -16,10 +17,14 @@ CCS5451_controller::CCS5451_controller():
   m_offsets(9)
 {
   m_offsets = {165,111,170,310,192,303,1855,666,800};
+
+  if(!m_calibration.load_from_file(g_calibration_file))
+    m_calibration.load_defaults();
 }
 
 CCS5451_controller::~CCS5451_controller()
 {
+  m_calibration.save_to_file(g_calibration_file);
   delete m_measurements;
 }
 
@@ -153,22 +158,25 @@ CMeasurements* CCS5451_controller::measurements()
 
 float CCS5451_controller::rms_voltage(int channel)
 {
-  return m_measurements->m_rms[channel]*0.0732f*1.0625f;
+  return m_measurements->m_rms[channel]*m_calibration.voltage_calib(channel);
 }
 float CCS5451_controller::rms_current(int channel)
 {
   if( m_gain)
-    return m_measurements->m_rms[channel]*0.0004883f/20.0f;
+    return m_measurements->m_rms[channel]*m_calibration.current_calib(channel,m_gain)/20.0f;
   else
-    return m_measurements->m_rms[channel]*0.0004883f;
+    return m_measurements->m_rms[channel]*m_calibration.current_calib(channel,m_gain);
 }
 
 float CCS5451_controller::p_power(int channel)
 {
+  float factor =
+      m_calibration.voltage_calib(channel*2)*
+      m_calibration.current_calib(channel*2+1, m_gain);
   if(m_gain)
-  return m_measurements->m_active_powers[channel]*0.0732f*1.0625f*0.0004883f/20.0f;
+  return m_measurements->m_active_powers[channel]*factor/20.0f;
   else
-  return m_measurements->m_active_powers[channel]*0.0732f*1.0625f*0.0004883f;
+  return m_measurements->m_active_powers[channel]*factor;
 }
 
 float CCS5451_controller::s_power(int channel)
@@ -214,4 +222,14 @@ QVector<int16_t> CCS5451_controller::zero()
   m_offsets[c_off+2] = -result[5];
   qDebug()<<m_offsets;
   return result;
+}
+
+CCalibrationData& CCS5451_controller::get_calibration()
+{
+  return m_calibration;
+}
+
+void CCS5451_controller::set_calibration(CCalibrationData data)
+{
+  m_calibration = data;
 }

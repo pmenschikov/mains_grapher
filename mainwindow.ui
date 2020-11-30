@@ -44,7 +44,7 @@
            </size>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>90</number>
@@ -97,7 +97,7 @@
            </size>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="horizontalHeaderMinimumSectionSize">
            <number>17</number>
@@ -222,6 +222,7 @@
     </property>
     <addaction name="actioncmd_start"/>
     <addaction name="actionCalibrate"/>
+    <addaction name="actionCalibration_Values"/>
    </widget>
    <widget class="QMenu" name="menuPort">
     <property name="title">
@@ -304,6 +305,11 @@
   <action name="actionCalibrate">
    <property name="text">
     <string>Calibrate</string>
+   </property>
+  </action>
+  <action name="actionCalibration_Values">
+   <property name="text">
+    <string>Calibration Values</string>
    </property>
   </action>
  </widget>

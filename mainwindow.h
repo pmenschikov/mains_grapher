@@ -40,6 +40,7 @@ public slots:
     void ui_power();
 
     void adc_calibrate();
+    void calibration_dialog();
 
     virtual void timerEvent(QTimerEvent *);
     void closeEvent(QCloseEvent *event);

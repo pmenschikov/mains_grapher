@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include <ccalibrationdata.h>
+
 namespace Ui {
   class CCalibrationWidget;
 }
@@ -14,6 +16,10 @@ class CCalibrationWidget : public QDialog
 public:
   explicit CCalibrationWidget(QWidget *parent = nullptr);
   ~CCalibrationWidget();
+
+  void set_calibration( const CCalibrationData& data);
+
+  bool get_calibration(CCalibrationData&);
 
 private:
   Ui::CCalibrationWidget *ui;

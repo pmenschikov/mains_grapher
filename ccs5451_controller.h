@@ -5,6 +5,7 @@
 #include "cadccontroller.h"
 #include "cdatabufffer.h"
 #include "cmeasurements.h"
+#include "ccalibrationdata.h"
 
 
 class CCS5451_controller:
@@ -42,6 +43,9 @@ public:
     float s_power(int channel);
     float pf(int channel);
 
+    CCalibrationData& get_calibration();
+    void set_calibration(CCalibrationData);
+
 signals:
     bool sig_error(int);
 public slots:
@@ -55,6 +59,8 @@ protected:
     CMeasurements* m_measurements;
 
     QVector<int16_t> m_offsets;
+
+    CCalibrationData m_calibration;
 
 
 };

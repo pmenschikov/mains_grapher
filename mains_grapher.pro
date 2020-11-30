@@ -27,6 +27,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    ccalibrationdata.cpp \
+    ccalibrationwidget.cpp \
     cmeasurements.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -39,6 +41,8 @@ SOURCES += \
     powers_widget.cpp
 
 HEADERS += \
+    ccalibrationdata.h \
+    ccalibrationwidget.h \
     cmeasurements.h \
         mainwindow.h \
     plot.h \
@@ -50,6 +54,7 @@ HEADERS += \
     cqserialinterface.h \
     powers_widget.h
 FORMS += \
+        ccalibrationwidget.ui \
         mainwindow.ui \
         powers_widget.ui
 

@@ -5,6 +5,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "ccalibrationwidget.h"
+
 #include "plot.h"
 #include "cdatabufffer.h"
 
@@ -74,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
             this,
             &MainWindow::actionCmdStart);
     connect(actions.at(1), &QAction::triggered, this, &MainWindow::adc_calibrate);
+    connect(actions.at(2),&QAction::triggered, this, &MainWindow::calibration_dialog);
     }
     connect(ui->menuStart,&QMenu::aboutToShow, this, &MainWindow::actionStart);
     connect(ui->menuStop, &QMenu::aboutToShow, this, &MainWindow::actionStop);
@@ -124,6 +127,18 @@ MainWindow::~MainWindow()
 void MainWindow::ui_power()
 {
   ui_power1->show();
+}
+
+void MainWindow::calibration_dialog()
+{
+  CCalibrationWidget widget;
+  CCalibrationData data;
+  widget.setModal(true);
+  widget.set_calibration(m_ctrl->get_calibration());
+  if( widget.exec() == QDialog::Accepted && widget.get_calibration(data))
+    {
+      m_ctrl->set_calibration(data);
+    }
 }
 
 void MainWindow::actionStart()
