@@ -18,6 +18,7 @@ public:
 
 public:
   QVector<float> m_data;
+  QVector<int16_t> m_offsets;
 };
 
 #endif // CCALIBRATIONDATA_H

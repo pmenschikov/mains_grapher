@@ -16,10 +16,16 @@ CCS5451_controller::CCS5451_controller():
   m_measurements(new CMeasurements(this)),
   m_offsets(9)
 {
-  m_offsets = {165,111,170,310,192,303,1855,666,800};
 
   if(!m_calibration.load_from_file(g_calibration_file))
+  {
     m_calibration.load_defaults();
+    qDebug() << "Calibration defaults loaded";
+  }
+  else
+    {
+        m_offsets = m_calibration.m_offsets;
+    }
 }
 
 CCS5451_controller::~CCS5451_controller()
@@ -63,25 +69,6 @@ adc_data CCS5451_controller::extract_data(QByteArray& data)
    s >> adc_data.current_b;
    s >> adc_data.voltage_c;
    s >> adc_data.current_c;
-
-static int count = 0;
-static QVector<long> sums(6,0);
-count++;
-	if( count == 160)
-	  {
-	   for(int i=0; i<6; i++)
-	     sums[i]/= 160;
-//	   qDebug() << "Raw Avg: " << sums;
-	   sums.fill(0);
-	   count=0;
-	  }
-	sums[0]+= adc_data.voltage_a;
-	sums[1]+= adc_data.voltage_b;
-	sums[2]+= adc_data.voltage_c;
-	sums[3]+= adc_data.current_a;
-	sums[4]+=adc_data.current_b;
-	sums[5]+=adc_data.current_c;
-
 
    return adc_data;
 }
@@ -220,6 +207,7 @@ QVector<int16_t> CCS5451_controller::zero()
   m_offsets[c_off] = -result[1];
   m_offsets[c_off+1] = -result[3];
   m_offsets[c_off+2] = -result[5];
+  m_calibration.m_offsets = m_offsets;
   qDebug()<<m_offsets;
   return result;
 }
@@ -232,4 +220,5 @@ CCalibrationData& CCS5451_controller::get_calibration()
 void CCS5451_controller::set_calibration(CCalibrationData data)
 {
   m_calibration = data;
+  m_offsets = m_calibration.m_offsets;
 }

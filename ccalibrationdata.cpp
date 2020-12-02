@@ -1,12 +1,14 @@
+#include <QDebug>
 #include <QFile>
 #include <QTextStream>
 
 #include "ccalibrationdata.h"
 
 CCalibrationData::CCalibrationData():
-  m_data(6)
+  m_data(6),
+  m_offsets(9)
 {
-        load_defaults();
+   load_defaults();
 }
 
 float CCalibrationData::voltage_calib(int channel) const
@@ -29,6 +31,8 @@ void CCalibrationData::load_defaults()
  m_data[3] = 0.0004883f;
  m_data[4] = 0.0732f;
  m_data[5] = 0.0004883f;
+
+ m_offsets =  {165,111,170,310,192,303,1855,666,800};
 }
 
 bool CCalibrationData::load_from_file(QString filename)
@@ -49,6 +53,16 @@ bool CCalibrationData::load_from_file(QString filename)
 
           m_data[i] = t;
         }
+      for(int i=0; i<m_offsets.length(); i++)
+        {
+          QString line = s.readLine();
+          bool conv;
+          auto t = static_cast<int16_t>(line.toInt(&conv));
+          if( !conv )
+            return false;
+
+          m_offsets[i] = t;
+        }
     }
 
   return true;
@@ -65,6 +79,11 @@ void CCalibrationData::save_to_file(QString filename)
       for(int i=0; i<m_data.length(); i++)
         {
           QString st(QString("%1").arg(m_data[i],0,'f',7));
+          s << st << "\n";
+        }
+      for(int i=0; i<m_offsets.length(); i++)
+        {
+          QString st(QString("%1").arg(m_offsets[i]));
           s << st << "\n";
         }
     }
