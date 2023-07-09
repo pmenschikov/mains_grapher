@@ -37,8 +37,9 @@ CCS5451_controller::~CCS5451_controller()
 void CCS5451_controller::start()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    m_interface->send(const_cast<char*>("e3\na1\n"),6);
+    m_interface->send(const_cast<char*>("e3\n"),3);
   sleep(1);
+  	m_interface->send(const_cast<char*>("f1\n"), 3);
 //    m_interface->send(const_cast<char*>("a1\n"),3);
 }
 
@@ -55,6 +56,7 @@ void CCS5451_controller::new_data(char *data,int len)
    translate(adc);
    put(adc);
 
+//   qDebug() << "new data";
 }
 
 adc_data CCS5451_controller::extract_data(QByteArray& data)
@@ -69,6 +71,15 @@ adc_data CCS5451_controller::extract_data(QByteArray& data)
    s >> adc_data.current_b;
    s >> adc_data.voltage_c;
    s >> adc_data.current_c;
+
+
+   if( adc_data.data_num > m_current_data_num+1)
+     {
+       qDebug() << adc_data.data_num << m_current_data_num << adc_data.data_num-m_current_data_num <<
+                   adc_data.data_num-m_prev_fail_data_num;
+       m_prev_fail_data_num = adc_data.data_num;
+     }
+   m_current_data_num = adc_data.data_num;
 
    return adc_data;
 }

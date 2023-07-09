@@ -61,8 +61,8 @@ protected:
     QVector<int16_t> m_offsets;
 
     CCalibrationData m_calibration;
-
-
+    unsigned int m_current_data_num;
+    unsigned int m_prev_fail_data_num;
 };
 
 #endif // CCS5451_CONTROLLER_H

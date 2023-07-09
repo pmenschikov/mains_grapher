@@ -236,6 +236,7 @@
      <string>Measuremens</string>
     </property>
     <addaction name="actionPowers"/>
+    <addaction name="actionVector_Diaram"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuStart"/>
@@ -310,6 +311,11 @@
   <action name="actionCalibration_Values">
    <property name="text">
     <string>Calibration Values</string>
+   </property>
+  </action>
+  <action name="actionVector_Diaram">
+   <property name="text">
+    <string>Vector Diaram</string>
    </property>
   </action>
  </widget>

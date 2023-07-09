@@ -68,7 +68,13 @@ QVector<adc_data> CDataBuffer::get(int count)
 
     if( m_current > count )
     {
-        ret = m_data.mid(m_current, count);
+        ret = m_data.mid(m_current-count, count);
+        qDebug() << "current" << m_current;
+    }
+    else
+    {
+        //ret = m_data.mid(m_current)
+
     }
 
     return ret;
@@ -91,7 +97,7 @@ int16_t CDataBuffer::get_value(int pos, int field)
 
 BufferedCurve* CDataBuffer::get_curve_data(int field)
 {
-    BufferedCurve *curve = new BufferedCurve(this, field, 40*4);
+    BufferedCurve *curve = new BufferedCurve(this, field, 40*1);
     m_curves.push_back(curve);
 
     return curve;

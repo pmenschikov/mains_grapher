@@ -29,6 +29,7 @@ CONFIG += c++11
 SOURCES += \
     ccalibrationdata.cpp \
     ccalibrationwidget.cpp \
+    cfft.cpp \
     cmeasurements.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -38,11 +39,13 @@ SOURCES += \
     cadccontroller.cpp \
     ccs5451_controller.cpp \
     cqserialinterface.cpp \
-    powers_widget.cpp
+    powers_widget.cpp \
+    vectordiagramwidget.cpp
 
 HEADERS += \
     ccalibrationdata.h \
     ccalibrationwidget.h \
+    cfft.h \
     cmeasurements.h \
         mainwindow.h \
     plot.h \
@@ -52,15 +55,17 @@ HEADERS += \
     cadcctrl_interface.h \
     ccs5451_controller.h \
     cqserialinterface.h \
-    powers_widget.h
+    powers_widget.h \
+    vectordiagramwidget.h
 FORMS += \
         ccalibrationwidget.ui \
         mainwindow.ui \
-        powers_widget.ui
+        powers_widget.ui \
+        vectord.ui
 
 INCLUDEPATH += "/usr/include/qwt6"
 DEPENDPATH  += "/usr/include/qwt6"
-LIBS        += -lqwt6-qt5
+LIBS        += -lqwt6-qt5 -lfftw3
 
 
 # Default rules for deployment.

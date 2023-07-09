@@ -7,6 +7,9 @@
 #include "ccs5451_controller.h"
 #include "cqserialinterface.h"
 #include "powers_widget.h"
+#include "cfft.h"
+#include "vectordiagramwidget.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +41,7 @@ public slots:
     void port_close();
 
     void ui_power();
+    void ui_vectors_show();
 
     void adc_calibrate();
     void calibration_dialog();
@@ -47,10 +51,13 @@ public slots:
 
 signals:
     void update_powers(CCS5451_controller*);
+    void update_fft(CFFT*);
 private:
     void update_graphs();
 
     void createActions();
+
+	void create_fft_plans();
 
     QAction *actGain;
     QAction *actOwrs;
@@ -62,6 +69,7 @@ private:
     QString m_portname;
 private:
     powers_widget *ui_power1;
+    VectorDiagramWidget *ui_vectors;
     Ui::MainWindow *ui;
 
 private:
@@ -71,6 +79,8 @@ private:
 
     CCS5451_controller *m_ctrl;
     CADCctrl_interface *m_iface;
+
+    CFFT m_fft;
 };
 
 #endif // MAINWINDOW_H

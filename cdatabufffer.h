@@ -48,7 +48,7 @@ class CDataBuffer
 {
 public:
     CDataBuffer():
-        m_capacity(40*50*2),
+        m_capacity(40*50*255),
         m_current(0),
         m_snapshot(0)
     {init();}

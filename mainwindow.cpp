@@ -4,6 +4,7 @@
 #include <QThread>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <complex>
 
 #include "ccalibrationwidget.h"
 
@@ -12,6 +13,8 @@
 
 #include "cqserialinterface.h"
 
+#include <fftw3.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -19,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui_power1 = new powers_widget();
+    ui_vectors = new VectorDiagramWidget;
 
     m_portname = "ttyACM0";
 
@@ -65,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
             &MainWindow::port_close);
     connect(ui->menuMeasuremens->actions().first(), &QAction::triggered,
             this,&MainWindow::ui_power);
+    connect(ui->menuMeasuremens->actions().last(), &QAction::triggered,
+            this,&MainWindow::ui_vectors_show);
     {
     auto actions = ui->menuFile->actions();
     connect(actions.first(), &QAction::triggered, this, &MainWindow::close);
@@ -99,6 +105,10 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     connect(this, &MainWindow::update_powers, ui_power1, &powers_widget::set_powers);
+
+    connect(this, &MainWindow::update_fft, ui_vectors, &VectorDiagramWidget::update_fft);
+
+    m_fft.prepare_plans();
 }
 
 void MainWindow::createActions()
@@ -127,6 +137,11 @@ MainWindow::~MainWindow()
 void MainWindow::ui_power()
 {
   ui_power1->show();
+}
+
+void MainWindow::ui_vectors_show()
+{
+  ui_vectors->show();
 }
 
 void MainWindow::calibration_dialog()
@@ -212,6 +227,19 @@ void MainWindow::update_graphs()
     }
 
     emit update_powers(m_ctrl);
+    const int N = FFT_SIZE;
+
+    for(int i=0; i<N; i++)
+      {
+        m_fft.fft_inA[i] = static_cast<double>(m_ctrl->get_value(i, 0));
+        m_fft.fft_inB[i] = static_cast<double>(m_ctrl->get_value(i, 2));
+        m_fft.fft_inC[i] = static_cast<double>(m_ctrl->get_value(i, 4));
+       // qDebug() << fft_inA[i] << fft_inB[i] << fft_inC[i];
+      }
+    m_fft.execute();
+
+//    m_fft.debug_out();
+    emit update_fft(&m_fft);
 }
 
 void MainWindow::if_error(int err)
@@ -247,4 +275,5 @@ void MainWindow::port_close()
 void MainWindow::closeEvent(QCloseEvent *event) {
   Q_UNUSED(event)
   ui_power1->close();
+  ui_vectors->close();
 }
