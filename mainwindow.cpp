@@ -211,9 +211,9 @@ void MainWindow::update_graphs()
     for(int i=0; i<3; i++)
     {
         ui->tblVoltages->item(i,1)->
-            setText(QString("%1").arg(m_ctrl->rms_voltage(i),0,'f',2));
+            setText(QString("%1").arg(m_ctrl->rms_voltage(i*2),0,'f',2));
         ui->tblCurrents->item(i,1)->
-            setText(QString("%1").arg(m_ctrl->rms_current(i+1),0,'f',2));
+            setText(QString("%1").arg(m_ctrl->rms_current(i*2+1),0,'f',2));
 
         ui->tblVoltages->item(i,0)->setText(QString("%1").
                                             arg(measurements->m_rms[i*2],0,'f',2));
